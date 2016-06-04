@@ -5,8 +5,6 @@ def CreateLineUp():
     The Purpose of this program is to automate the selection of a Fantasy Baseball Lineup on FanDuel.com
     to win GPP and Head-To-Head Contests.
     An algorithm has been developed which determines 'efficiency' of a player based on FPPG and salary.
-    :param DailyRoster:
-    :return:
     """
 
 def LoadPlayerData(player_data_csv, players_data_list):
@@ -57,15 +55,6 @@ def DraftLineup(filt_player_list):
     ss_list = []
     of_list = []
     list_of_lineups = []
-
-    lineup = {"P": None,
-              "C": None,
-              "1B": None,
-              "2B": None,
-              "3B": None,
-              "SS": None,
-              "OF": [None, None, None],
-              "Draft Salary": None}
 
         #Team Rank is based on MLB Power Rankings and will be used to draft players on high-ranked teams which
         #play low-ranked teams, from ESPN.com Power Ranking, accessed 5/31/2016
@@ -126,14 +115,6 @@ def DraftLineup(filt_player_list):
             elif player[2] == 'OF':
                 of_list.append([player[0], player[1], player[-1], player[-2], player[3], player[5]])
 
-    """
-            if player[2] == 'OF':
-                if of_i < 3:
-                    lineup[player[2]][of_i] = player[1] + " " + player[0]
-                    of_i += 1
-            else:
-                lineup[player[2]] = player[1] + " " + player[0]
-    """
             #Positions are drafted using random choice based upon pre-built/filtered lists for each position
             #While Statement continues to draft lineups until draft salary is less than Salary Cap
 
@@ -160,44 +141,12 @@ def DraftLineup(filt_player_list):
         for player in lineup_list:
             draft_salary += int(player[-1])
             tot_avg_fppg += float(player[-2])
-    """    if draft_salary < 33500:
-            for player in of_list:
-                if int(outfield3[-1])<int(player[-1]):
-                    lineup_list.pop()
-                    lineup_list.append(player)
 
-            draft_salary = 0
-            tot_avg_fppg = 0
-            for player in lineup_list:
-                draft_salary += int(player[-1])
-                tot_avg_fppg += float(player[-2])
-    """
         lineup_list.append(draft_salary)
         lineup_list.append(tot_avg_fppg)
         if 33500 < int(draft_salary) < 35100:
             list_of_lineups.append(lineup_list)
 
-
-    """
-    lineup["P"] = pitcher[1] + " " + pitcher[0]
-    lineup["C"] = catcher[1] + " " + catcher[0]
-    lineup["1B"] = first_base[1] + " " + first_base[0]
-    lineup["2B"] = second_base[1] + " " + second_base[0]
-    lineup["3B"] = third_base[1] + " " + third_base[0]
-    lineup["SS"] = short_stop[1] + " " + short_stop[0]
-    lineup["OF"][0] = outfield1[1] + " " + outfield1[0]
-    lineup["OF"][1] = outfield2[1] + " " + outfield2[0]
-    lineup["OF"][2] = outfield3[1] + " " + outfield3[0]
-    lineup["Draft Salary"] = draft_salary
-
-    print(lineup)
-    print("alternative outfielders list", of_list)
-    print("first base", first_b_list)
-    print(second_b_list)
-    print(third_b_list)
-    print(ss_list)
-    print("Pitcher List", pitcher_list)
-    """
     for lineups in list_of_lineups:
         print(lineups)
 
