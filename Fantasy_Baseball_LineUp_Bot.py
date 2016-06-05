@@ -3,8 +3,10 @@ import random
 def CreateLineUp():
     """
     The Purpose of this program is to automate the selection of a Fantasy Baseball Lineup on FanDuel.com
-    to win GPP and Head-To-Head Contests.
-    An algorithm has been developed which determines 'efficiency' of a player based on FPPG and salary.
+    to win GPP and Head-To-Head Contests. 
+    Download .csv from FanDuel.com, place in folder and run program to output a Fantasy Baseball lineup. 
+    For use in 50/50 or Head to Head matchups.
+    Future Changes: An algorithm which determines 'efficiency' of a player based on FPPG and salary.
     """
 
 def LoadPlayerData(player_data_csv, players_data_list):
@@ -47,6 +49,7 @@ def FilterPlayerData(player_list):
 def DraftLineup(filt_player_list):
     salary_cap = 35000
     draft_salary = 0
+                                #A List is Created for each position based on filtered players list and other determining factors
     pitcher_list = []
     catch_list = []
     first_b_list = []
@@ -58,6 +61,8 @@ def DraftLineup(filt_player_list):
 
         #Team Rank is based on MLB Power Rankings and will be used to draft players on high-ranked teams which
         #play low-ranked teams, from ESPN.com Power Ranking, accessed 5/31/2016
+        #A Webscraping script will be added to automatically upload Team Ranking from ESPN power ranking
+        
     team_rank = {"CHC": 1,
                  "BOS": 2,
                  "WAS": 3,
@@ -90,15 +95,12 @@ def DraftLineup(filt_player_list):
                  "MIL": 26}
 
     for player in filt_player_list:     #Append to filtered player list the differential between ranking of teams
-        home = player[6]
+        home = player[6]                #Players are chosen on teams which are at a significant advantage over their opponent
         opponent = player[7]
         player.append(team_rank[home]-team_rank[opponent])
 
     for player in filt_player_list:     #Create Line-Up based upon positions and team-rankings
         if player[10]<-4:          #Only Select Players which have a team power ranking difference of greater than 7
-            #print(player)
-            #for position in lineup.keys():
-
             if player[2] == 'P':
                 if int(player[5]) > 7000:
                     pitcher_list.append([player[0], player[1], player[-1], player[-2], player[3], player[5]])
@@ -115,9 +117,8 @@ def DraftLineup(filt_player_list):
             elif player[2] == 'OF':
                 of_list.append([player[0], player[1], player[-1], player[-2], player[3], player[5]])
 
-            #Positions are drafted using random choice based upon pre-built/filtered lists for each position
-            #While Statement continues to draft lineups until draft salary is less than Salary Cap
-
+        #Positions are drafted using random choice based upon pre-built/filtered lists for each position
+        #Ten LineUps are drafted based upon pre-developed lists of players at each position
     for i in range(10):
         pitcher = random.choice(pitcher_list)
         catcher = random.choice(catch_list)
@@ -127,7 +128,7 @@ def DraftLineup(filt_player_list):
         short_stop = random.choice(ss_list)
         outfield1 = random.choice(of_list)
         outfield2 = random.choice(of_list)
-        if outfield1 == outfield2:
+        if outfield1 == outfield2:                      #Ensuring the outfield players are not Duplicated
             outfield2 = random.choice(of_list)
         outfield3 = random.choice(of_list)
         if outfield3 == (outfield2 or outfield1):
@@ -135,17 +136,18 @@ def DraftLineup(filt_player_list):
 
         lineup_list = [pitcher, catcher, first_base, second_base, third_base, short_stop,
                        outfield1, outfield2, outfield3]
+                            #Creates Line-Up from randomly-chosen positions
         draft_salary = 0
         tot_avg_fppg = 0
 
-        for player in lineup_list:
-            draft_salary += int(player[-1])
+        for player in lineup_list:                      #Calculates the total salary for each lineup and fppg for the line up
+            draft_salary += int(player[-1])             #Efficiency will also be calculated for line-ups
             tot_avg_fppg += float(player[-2])
 
         lineup_list.append(draft_salary)
         lineup_list.append(tot_avg_fppg)
-        if 33500 < int(draft_salary) < 35100:
-            list_of_lineups.append(lineup_list)
+        if 33500 < int(draft_salary) < 35100:           #Prepares list of lineups with salary cap between 33500 and 35000
+            list_of_lineups.append(lineup_list)         #Includes Efficiency for comparison among various lineups
 
     for lineups in list_of_lineups:
         print(lineups)
@@ -155,9 +157,6 @@ def main():
     play_csv = input('What is the name of the daily CSV file?')
     player_list = LoadPlayerData(play_csv, players_data_list)
     filter_player_list = FilterPlayerData(player_list)
-    print("Original Number of Players: {}".format(len(player_list)))
-    print("Filtered Number of Players: {}".format(len(filter_player_list)))
-
     DraftLineup(filter_player_list)
 
 if __name__ == "__main__":
