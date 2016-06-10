@@ -146,7 +146,9 @@ def DraftLineup(filt_player_list):
 
         lineup_list.append(draft_salary)
         lineup_list.append(tot_avg_fppg)
-        if 33500 < int(draft_salary) < 35100:           #Prepares list of lineups with salary cap between 33500 and 35000
+        if 33500 < int(draft_salary) < 35100:
+            i -= 1
+        else:    
             list_of_lineups.append(lineup_list)         #Includes Efficiency for comparison among various lineups
 
     for lineups in list_of_lineups:
