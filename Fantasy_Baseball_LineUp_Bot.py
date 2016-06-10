@@ -119,7 +119,7 @@ def DraftLineup(filt_player_list):
 
         #Positions are drafted using random choice based upon pre-built/filtered lists for each position
         #Ten LineUps are drafted based upon pre-developed lists of players at each position
-    for i in range(10):
+    while len(list_of_lineups) < 10 :
         pitcher = random.choice(pitcher_list)
         catcher = random.choice(catch_list)
         first_base = random.choice(first_b_list)
@@ -146,12 +146,15 @@ def DraftLineup(filt_player_list):
 
         lineup_list.append(draft_salary)
         lineup_list.append(tot_avg_fppg)
-        if 33500 < int(draft_salary) < 35100:
+        lineup_list.append(float(draft_salary/tot_avg_fppg))
+        if 34500 < int(draft_salary) < 35100:
             list_of_lineups.append(lineup_list)         #Includes Efficiency for comparison among various lineups
-
+    min_efficiency = 1000
     for lineups in list_of_lineups:
         print(lineups)
-
+        if lineups[-1]<min_efficiency:
+            min_efficiency=lineups[-1]
+    print(min_efficiency)
 def main():
     players_data_list = []
     play_csv = input('What is the name of the daily CSV file?')
