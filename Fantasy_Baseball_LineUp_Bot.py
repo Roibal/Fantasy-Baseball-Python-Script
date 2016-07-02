@@ -119,7 +119,7 @@ def DraftLineup(filt_player_list):
 
         #Positions are drafted using random choice based upon pre-built/filtered lists for each position
         #Ten LineUps are drafted based upon pre-developed lists of players at each position
-    for i in range(10):
+    while len(list_of_lineups) < 10 :
         pitcher = random.choice(pitcher_list)
         catcher = random.choice(catch_list)
         first_base = random.choice(first_b_list)
@@ -131,7 +131,9 @@ def DraftLineup(filt_player_list):
         if outfield1 == outfield2:                      #Ensuring the outfield players are not Duplicated
             outfield2 = random.choice(of_list)
         outfield3 = random.choice(of_list)
-        if outfield3 == (outfield2 or outfield1):
+        while outfield3 == outfield2:
+            outfield3 = random.choice(of_list)
+        while outfield3 == outfield1:
             outfield3 = random.choice(of_list)
 
         lineup_list = [pitcher, catcher, first_base, second_base, third_base, short_stop,
@@ -146,12 +148,36 @@ def DraftLineup(filt_player_list):
 
         lineup_list.append(draft_salary)
         lineup_list.append(tot_avg_fppg)
-        if 33500 < int(draft_salary) < 35100:           #Prepares list of lineups with salary cap between 33500 and 35000
+        lineup_list.append(float(draft_salary/tot_avg_fppg))
+        if 34500 < int(draft_salary) < 35100:
             list_of_lineups.append(lineup_list)         #Includes Efficiency for comparison among various lineups
-
+    min_efficiency = 1000
     for lineups in list_of_lineups:
         print(lineups)
+        if lineups[-1]<min_efficiency:
+            min_efficiency=lineups[-1]
+    print(min_efficiency)
+    ABTest(list_of_lineups)
 
+def ABTest(lineup_list):
+    """
+    The purpose of this function is to perform A/B Testing on Lineups.
+    The lineup with lowest Projected Points will be lineup 'B'.
+    The lineup with highest Project Points will be lineup 'A'.
+    Each lineup will be entered in 50/50 lineups, with all data recorded in separate excel spreadsheet.
+    :param lineup_list:
+    :return:
+    """
+    lineupA = lineup_list[0]
+    lineupB = lineup_list[1]
+    for lineup in lineup_list:
+        if lineup[-2]>lineupA[-2]:
+            lineupA=lineup
+        if lineup[-2]<lineupB[-2]:
+            lineupB = lineup
+    print("Lineup A: ", lineupA)
+    print("Lineup B: ", lineupB)
+    
 def main():
     players_data_list = []
     play_csv = input('What is the name of the daily CSV file?')
