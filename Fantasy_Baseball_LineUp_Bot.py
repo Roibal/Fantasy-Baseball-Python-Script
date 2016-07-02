@@ -175,9 +175,21 @@ def ABTest(lineup_list):
             lineupA=lineup
         if lineup[-2]<lineupB[-2]:
             lineupB = lineup
-    print("Lineup A: ", lineupA)
-    print("Lineup B: ", lineupB)
-    
+
+    print("\nLineup A:\n ")
+    lineupA_list = []
+    for player in lineupA[:-3]:
+        player_name = player[1] + " " + player[0]
+        lineupA_list.append(player_name)
+    print(lineupA_list, lineupA[-2])
+
+    print("\nLineup B:\n ")
+    lineupB_list = []
+    for player in lineupB[:-3]:
+        player_name = player[1] + " " + player[0]
+        lineupB_list.append(player_name)
+    print(lineupB_list, lineupB[-2])
+
 def main():
     players_data_list = []
     play_csv = input('What is the name of the daily CSV file?')
