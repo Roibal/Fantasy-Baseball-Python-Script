@@ -131,7 +131,9 @@ def DraftLineup(filt_player_list):
         if outfield1 == outfield2:                      #Ensuring the outfield players are not Duplicated
             outfield2 = random.choice(of_list)
         outfield3 = random.choice(of_list)
-        if outfield3 == (outfield2 or outfield1):
+        while outfield3 == outfield2:
+            outfield3 = random.choice(of_list)
+        while outfield3 == outfield1:
             outfield3 = random.choice(of_list)
 
         lineup_list = [pitcher, catcher, first_base, second_base, third_base, short_stop,
@@ -155,6 +157,27 @@ def DraftLineup(filt_player_list):
         if lineups[-1]<min_efficiency:
             min_efficiency=lineups[-1]
     print(min_efficiency)
+    ABTest(list_of_lineups)
+
+def ABTest(lineup_list):
+    """
+    The purpose of this function is to perform A/B Testing on Lineups.
+    The lineup with lowest Projected Points will be lineup 'B'.
+    The lineup with highest Project Points will be lineup 'A'.
+    Each lineup will be entered in 50/50 lineups, with all data recorded in separate excel spreadsheet.
+    :param lineup_list:
+    :return:
+    """
+    lineupA = lineup_list[0]
+    lineupB = lineup_list[1]
+    for lineup in lineup_list:
+        if lineup[-2]>lineupA[-2]:
+            lineupA=lineup
+        if lineup[-2]<lineupB[-2]:
+            lineupB = lineup
+    print("Lineup A: ", lineupA)
+    print("Lineup B: ", lineupB)
+    
 def main():
     players_data_list = []
     play_csv = input('What is the name of the daily CSV file?')
